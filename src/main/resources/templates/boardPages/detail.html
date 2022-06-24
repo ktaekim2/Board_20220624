@@ -1,10 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+            crossorigin="anonymous"></script>
 </head>
 <body>
 <h2>detail.html</h2>
+<p th:text="${board}"></p>
+<button onclick="deleteBoard()">글삭제</button>
+<button onclick="updateBoard()">글수정</button>
+<br>
+<p id="inputPosition"></p>
+<span th:text="${board.getBoardPassword()}" id="pw" hidden></span>
+<span th:text="${board.getId()}" id="boardId" hidden></span>
 </body>
+<script th:inline="javascript">
+    const pw = document.getElementById("pw").innerHTML;
+    const boardId = document.getElementById("boardId").innerHTML;
+    const deleteBoard = () => {
+        document.getElementById("inputPosition").innerHTML = "<input type=\"text\" placeholder=\"비밀번호\" id=\"pwInput\"><button type=\"button\" id=\"deleteBtn\" onclick=\"pwCheck(this.id)\">확인</button>"
+    }
+
+    const updateBoard = () => {
+        document.getElementById("inputPosition").innerHTML = "<input type=\"text\" placeholder=\"비밀번호\" id=\"pwInput\"><button type=\"button\" id=\"updateBtn\" onclick=\"pwCheck(this.id)\">확인</button>"
+
+    }
+
+    const pwCheck = (inputId) => {
+        console.log(inputId);
+        console.log(pw);
+        console.log(boardId);
+        const inputPassword = document.getElementById("pwInput").value
+        if (inputPassword == pw)
+            if (inputId == "deleteBtn")
+                location.href = "/board/delete/" + boardId;
+            else
+                location.href = "/board/update/" + boardId;
+        else
+            alert("비밀번호 불일치")
+    }
+</script>
 </html>
