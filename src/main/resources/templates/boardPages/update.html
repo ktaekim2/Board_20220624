@@ -14,6 +14,7 @@
     </style>
 </head>
 <body>
+<th:block th:replace="commonPages/header :: header"></th:block>
 <h2>update.html</h2>
 <form action="/board/update" method="post">
     <input type="hidden" name="id" th:value="${board.id}" readonly>
