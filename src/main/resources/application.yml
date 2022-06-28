@@ -21,3 +21,7 @@ spring:
   # 타임리프 캐시 무효화
   thymeleaf:
     cache: false
+
+# mybatis 설정
+mybatis:
+  mapper-locations: mapper/*.xml

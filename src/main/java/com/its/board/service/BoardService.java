@@ -33,19 +33,19 @@ public class BoardService {
         String boardFileName = boardFile.getOriginalFilename();
         boardFileName = System.currentTimeMillis() + "_" + boardFileName;
         String savePath = "D:\\springboot_img\\" + boardFileName;
-        if(!boardFile.isEmpty()) {
+        if (!boardFile.isEmpty()) {
             boardFile.transferTo(new File(savePath));
         }
         boardDTO.setBoardFileName(boardFileName);
 
         //toEntity메서드에 회원 엔티티를 같이 전달해야 함. (디비에서 회원엔티티를 가져오는 작업이 필요)
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(boardDTO.getBoardWriter());
-        if(optionalMemberEntity.isPresent()){
+        if (optionalMemberEntity.isPresent()) {
             MemberEntity memberEntity = optionalMemberEntity.get();
             Long savedId = boardRepository.save(BoardEntity.toBoard(boardDTO, memberEntity
             )).getId();
             return savedId;
-        }else {
+        } else {
             return null;
         }
     }
@@ -84,7 +84,7 @@ public class BoardService {
         int page = pageable.getPageNumber(); // 요청 페이지값 가져옴
         // 요청한 페이지가 1이면 페이지값을 0으로 하고 1이 아니면 요청 페이지에서 1을 뺀다.
 //        page = page - 1;
-        page = (page == 1)? 0: (page-1); // 삼항연산자
+        page = (page == 1) ? 0 : (page - 1); // 삼항연산자
         // 매서드 오버로딩? 오버라이딩?
         // PageRequest: 매서드 오버로딩
         Page<BoardEntity> boardEntities = boardRepository.findAll(PageRequest.of(page, PagingConst.PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "id")));
@@ -102,5 +102,14 @@ public class BoardService {
                         board.getCreatedTime()
                 ));
         return boardList;
+    }
+
+    public List<BoardDTO> search(String q) {
+        List<BoardEntity> boardEntityList = boardRepository.findByBoardTitleContaining(q);
+        List<BoardDTO> boardDTOList = new ArrayList<>();
+        for (BoardEntity boardEntity : boardEntityList) {
+            boardDTOList.add(BoardDTO.toBoardDTO(boardEntity));
+        }
+        return boardDTOList;
     }
 }

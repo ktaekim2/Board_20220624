@@ -2,6 +2,7 @@ package com.its.board.controller;
 
 import com.its.board.common.PagingConst;
 import com.its.board.dto.BoardDTO;
+import com.its.board.entity.BoardEntity;
 import com.its.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -81,5 +82,14 @@ public class BoardController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         return "boardPages/paging";
+    }
+
+    // 검색
+    @GetMapping("/search")
+    public String search(@RequestParam("q") String q, Model model) {
+        List<BoardDTO> searchList = boardService.search(q);
+        model.addAttribute("searchList", searchList);
+        return "/boardPages/search";
+
     }
 }
