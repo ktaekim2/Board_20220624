@@ -3,7 +3,9 @@ package com.its.board.service;
 import com.its.board.common.PagingConst;
 import com.its.board.dto.BoardDTO;
 import com.its.board.entity.BoardEntity;
+import com.its.board.entity.MemberEntity;
 import com.its.board.repository.BoardRepository;
+import com.its.board.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +25,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final MemberRepository memberRepository;
 
 
     public Long save(BoardDTO boardDTO) throws IOException {
@@ -34,9 +37,20 @@ public class BoardService {
             boardFile.transferTo(new File(savePath));
         }
         boardDTO.setBoardFileName(boardFileName);
-        return boardRepository.save(BoardEntity.toEntity(boardDTO)).getId();
+
+        //toEntity메서드에 회원 엔티티를 같이 전달해야 함. (디비에서 회원엔티티를 가져오는 작업이 필요)
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(boardDTO.getBoardWriter());
+        if(optionalMemberEntity.isPresent()){
+            MemberEntity memberEntity = optionalMemberEntity.get();
+            Long savedId = boardRepository.save(BoardEntity.toBoard(boardDTO, memberEntity
+            )).getId();
+            return savedId;
+        }else {
+            return null;
+        }
     }
 
+    @Transactional // 객체 그래프 탐색을 해야 한다면 반드시 Transactional 어노테이션을 써야한다
     public List<BoardDTO> findAll() {
         List<BoardEntity> boardEntityList = boardRepository.findAll();
         List<BoardDTO> boardDTOList = new ArrayList<>();
@@ -46,7 +60,7 @@ public class BoardService {
         return boardDTOList;
     }
 
-    @Transactional
+    @Transactional //native sql사용시 transactional 어노테이션 필수
     public BoardDTO findById(Long id) {
         // 조회수 처리
         boardRepository.boardHits(id);
