@@ -95,13 +95,13 @@ public class BoardTest {
     @Test
     @Transactional
     @Rollback(value = false)
-    @DisplayName("회원 게시글 연관관계 테스트")
+    @DisplayName("회원 게시글 연관관계 저장 테스트")
     public void memberBoardSaveTest() {
         BoardDTO boardDTO = newBoard(1); //저장할 게시글 객체
         //회원 엔티티 객체를 같이 줘야하니까 위에서 저장한 이메일 값으로 회원 엔티티 조회
         MemberEntity memberEntity = memberRepository.findByMemberEmail("email1").get();
         //게시글 객체와 회원 엔티티로 boardEntity 객체 생성
-        BoardEntity boardEntity = BoardEntity.toBoard(boardDTO, memberEntity);
+        BoardEntity boardEntity = BoardEntity.toEntity(boardDTO, memberEntity);
         //저장 수행
         boardRepository.save(boardEntity);
     }
@@ -109,7 +109,7 @@ public class BoardTest {
     @Test
     @Transactional
     @Rollback(value = false)
-    @DisplayName("회원 게시글 연관관계 테스트")
+    @DisplayName("회원 게시글 연관관계 조회 테스트")
     public void memberBoardFindByIdTest() {
         //위에서 저장한 테이블 조회
         Optional<BoardEntity> optionalBoardEntity = boardRepository.findById(2L);

@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +47,7 @@ public class BoardEntity extends BaseEntity { // BaseEntity 클래스를 상속�
     private List<CommentEntity> commentEntityList = new ArrayList<>();
 
     //회원엔티티와 연관관계 맺기 전
-//    public static BoardEntity toBoard(BoardDTO boardDTO) {
+//    public static BoardEntity toEntity(BoardDTO boardDTO) {
 //        BoardEntity boardEntity = new BoardEntity();
 //        boardEntity.setBoardTitle(boardDTO.getBoardTitle());
 //        boardEntity.setBoardWriter(boardDTO.getBoardWriter());
@@ -60,7 +59,7 @@ public class BoardEntity extends BaseEntity { // BaseEntity 클래스를 상속�
 //    }
 
     //회원과 연관관계 맺은 후 toEntity
-    public static BoardEntity toBoard(BoardDTO boardDTO, MemberEntity memberEntity) {
+    public static BoardEntity toEntity(BoardDTO boardDTO, MemberEntity memberEntity) {
         BoardEntity boardEntity = new BoardEntity();
         boardEntity.setBoardTitle(boardDTO.getBoardTitle());
         boardEntity.setBoardWriter(boardDTO.getBoardWriter());

@@ -42,7 +42,7 @@ public class BoardService {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(boardDTO.getBoardWriter());
         if (optionalMemberEntity.isPresent()) {
             MemberEntity memberEntity = optionalMemberEntity.get();
-            Long savedId = boardRepository.save(BoardEntity.toBoard(boardDTO, memberEntity
+            Long savedId = boardRepository.save(BoardEntity.toEntity(boardDTO, memberEntity
             )).getId();
             return savedId;
         } else {
